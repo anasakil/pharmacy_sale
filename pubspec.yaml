@@ -31,9 +31,14 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.0
+  http: ^0.13.4  # or the latest version
   flutter_map: ^4.0.0
+  location: ^4.4.0
   latlong2: ^0.8.1
   flutter_map_location_marker: ^6.0.0 # Upgrade to a compatible version
+  getwidget: ^2.0.4  
+
+
 
 
 
@@ -65,6 +70,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/p.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -1,19 +1,25 @@
-// lib/viewmodels/pharmacy_viewmodel.dart
-
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
 import '../models/pharmacy_model.dart';
 
 class PharmacyViewModel extends ChangeNotifier {
-  // Pharmacy location details
-  final Pharmacy pharmacy = Pharmacy(
-    name: "Pharmacy Garde",
-    phone: "+123456789",
-    address: "34.0634, -6.7745",
-    latitude: 34.06346399450203,
-    longitude: -6.774515380780635,
-  );
+  List<Pharmacy> pharmacies = [];
 
-  void showPharmacyDetails(BuildContext context) {
+  Future<void> fetchPharmacies() async {
+    final response = await http.get(Uri.parse('http://localhost:3000/pharmacies'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      pharmacies = data.map((json) => Pharmacy.fromJson(json)).toList();
+      notifyListeners();
+    } else {
+      throw Exception("Failed to load pharmacies");
+    }
+  }
+
+  void showPharmacyDetails(BuildContext context, Pharmacy pharmacy) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

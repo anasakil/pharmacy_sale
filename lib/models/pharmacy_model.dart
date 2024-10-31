@@ -13,4 +13,14 @@ class Pharmacy {
     required this.latitude,
     required this.longitude,
   });
+
+  factory Pharmacy.fromJson(Map<String, dynamic> json) {
+    return Pharmacy(
+      name: json['name'],
+      phone: json['phone'],
+      address: json['address'],
+      latitude: json['latitude'].toDouble(),
+      longitude: json['longitude'].toDouble(),
+    );
+  }
 }
