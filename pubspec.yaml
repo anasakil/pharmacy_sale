@@ -37,6 +37,8 @@ dependencies:
   latlong2: ^0.8.1
   flutter_map_location_marker: ^6.0.0 # Upgrade to a compatible version
   getwidget: ^2.0.4  
+  geolocator: ^9.0.0
+
 
 
 
