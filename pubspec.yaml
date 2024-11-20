@@ -31,13 +31,14 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.0
-  http: ^0.13.4  # or the latest version
+  http: ^0.13.4  
   flutter_map: ^4.0.0
-  location: ^4.4.0
   latlong2: ^0.8.1
-  flutter_map_location_marker: ^6.0.0 # Upgrade to a compatible version
-  getwidget: ^2.0.4  
-  geolocator: ^9.0.0
+  permission_handler: ^10.2.0 
+  geolocator: ^9.0.1
+  url_launcher: ^6.1.10
+
+ 
 
 
 

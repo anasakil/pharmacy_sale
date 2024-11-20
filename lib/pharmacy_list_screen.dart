@@ -9,7 +9,7 @@ class PharmacyListScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Pharmacy List"),
+        title: Text("Pharmacyyy List"),
         backgroundColor: Color.fromARGB(255, 88, 179, 14),
       ),
       body: viewModel.pharmacies.isEmpty
