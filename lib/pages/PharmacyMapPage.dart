@@ -9,7 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../components/CustomDrawer.dart';
 import '../viewmodels/pharmacy_viewmodel.dart';
-import '../utils/tokenmapbox.dart'; // Import the token here
+import '../utils/tokenmapbox.dart';
 
 class PharmacyMapPage extends StatefulWidget {
   @override
@@ -20,32 +20,37 @@ class _PharmacyMapPageState extends State<PharmacyMapPage> {
   List<LatLng> routePoints = [];
   String travelTime = "";
   String selectedMode = 'driving';
-  LatLng userLocation = LatLng(34.06854820134339, -6.7639096);
+  LatLng userLocation = LatLng(34.064820134339, -6.7639096);
+  bool isRouteVisible = false;
+  MapController mapController = MapController(); 
 
   @override
   void initState() {
     super.initState();
-    checkLocationPermission();
-    getUserLocation();
+    checkLocationPermission(); // Vérifie la permission de localisation à l'initialisation
+    getUserLocation(); // Récupère la localisation de l'utilisateur
   }
 
+  // Fonction pour vérifier la permission de localisation
   Future<void> checkLocationPermission() async {
     var status = await Permission.location.status;
     if (!status.isGranted) {
-      await Permission.location.request();
+      await Permission.location.request(); // Demande la permission si elle n'est pas accordée
     }
   }
 
+  // Fonction pour récupérer la localisation de l'utilisateur
   Future<void> getUserLocation() async {
     Position position = await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high,
     );
 
     setState(() {
-      userLocation = LatLng(position.latitude, position.longitude);
+      userLocation = LatLng(position.latitude, position.longitude); // Met à jour la position de l'utilisateur
     });
   }
 
+  // Fonction pour récupérer l'itinéraire et le temps de trajet entre l'utilisateur et la pharmacie
   Future<void> fetchRouteAndTime(LatLng destination) async {
     final String url =
         'https://api.mapbox.com/directions/v5/mapbox/$selectedMode/${userLocation.longitude},${userLocation.latitude};${destination.longitude},${destination.latitude}?geometries=geojson&access_token=$mapboxToken';
@@ -62,32 +67,33 @@ class _PharmacyMapPageState extends State<PharmacyMapPage> {
         routePoints = geometry.map<LatLng>((coord) {
           return LatLng(coord[1], coord[0]);
         }).toList();
-        travelTime = '${(durationInSeconds / 60).toStringAsFixed(1)} min';
+        travelTime = '${(durationInSeconds / 60).toStringAsFixed(1)} min'; // Calcule et affiche le temps estimé
+        isRouteVisible = true; // Affiche l'itinéraire
       });
     } else {
-      print('Failed to fetch route data');
+      print('Échec de la récupération des données d\'itinéraire');
     }
   }
 
-  // Function to open Apple Maps
-  void openAppleMaps(LatLng location) async {
-    final url =
-        'https://maps.apple.com/?daddr=${location.latitude},${location.longitude}';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
-      print('Could not open Apple Maps');
-    }
-  }
-
-  // Function to open Waze
+  // Fonction pour ouvrir l'application Waze avec la destination
   void openWaze(LatLng location) async {
     final url = Uri.parse(
         'https://waze.com/ul?ll=${location.latitude},${location.longitude}&navigate=yes');
     if (await canLaunchUrl(url)) {
-      await launchUrl(url);
+      await launchUrl(url); // Ouvre Waze avec la destination
     } else {
-      print('Could not open Waze in the browser');
+      print('Impossible d\'ouvrir Waze dans le navigateur');
+    }
+  }
+
+  // Fonction pour ouvrir Google Maps avec la destination et le mode de transport
+  void openGoogleMaps(LatLng location) async {
+    final url =
+        'https://www.google.com/maps/dir/?api=1&destination=${location.latitude},${location.longitude}&travelmode=$selectedMode';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url)); // Ouvre Google Maps avec la destination
+    } else {
+      print('Impossible d\'ouvrir Google Maps');
     }
   }
 
@@ -98,14 +104,15 @@ class _PharmacyMapPageState extends State<PharmacyMapPage> {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text("L9a Pharmacy"),
+          child: Text("L9a Pharmacy"), // Titre de l'application
         ),
         backgroundColor: const Color.fromARGB(255, 98, 199, 15),
       ),
-      drawer: CustomDrawer(),
+      drawer: CustomDrawer(), // Menu latéral personnalisé
       body: Stack(
         children: [
           FlutterMap(
+            mapController: mapController, 
             options: MapOptions(center: userLocation, zoom: 14.0),
             children: [
               TileLayer(
@@ -138,37 +145,71 @@ class _PharmacyMapPageState extends State<PharmacyMapPage> {
                                 title: Text('Select Action'),
                                 content: Text('What would you like to do?'),
                                 actions: [
+                                  // Options de navigation ou d'affichage des détails
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       fetchRouteAndTime(LatLng(
-                                          pharmacy.latitude, pharmacy.longitude));
+                                          pharmacy.latitude,
+                                          pharmacy.longitude)); // Récupère l'itinéraire vers la pharmacie
                                     },
-                                    child: Text("Navigate"),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.directions,
+                                            color: Colors.blue), 
+                                        SizedBox(width: 8),
+                                        Text("Navigate in this app"),
+                                      ],
+                                    ),
                                   ),
+
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       viewModel.showPharmacyDetails(
-                                          context, pharmacy);
+                                          context, pharmacy); // Affiche les détails de la pharmacie
                                     },
-                                    child: Text("View Details"),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.info,
+                                            color:
+                                                Colors.green), 
+                                        SizedBox(width: 8),
+                                        Text("View Details"),
+                                      ],
+                                    ),
                                   ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                      openAppleMaps(LatLng(pharmacy.latitude,
-                                          pharmacy.longitude));
-                                    },
-                                    child: Text("Apple Maps"),
-                                  ),
+
                                   TextButton(
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                       openWaze(LatLng(pharmacy.latitude,
-                                          pharmacy.longitude));
+                                          pharmacy.longitude)); // Ouvre Waze avec la pharmacie sélectionnée
                                     },
-                                    child: Text("Waze"),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.directions_car,
+                                            color: Colors.red), 
+                                        SizedBox(width: 8),
+                                        Text("Navigate with Waze"),
+                                      ],
+                                    ),
+                                  ),
+
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                      openGoogleMaps(LatLng(pharmacy.latitude,
+                                          pharmacy.longitude)); // Ouvre Google Maps avec la pharmacie sélectionnée
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.map,
+                                            color: Colors.blue), 
+                                        SizedBox(width: 8),
+                                        Text("Navigate with Google Maps"),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -181,59 +222,50 @@ class _PharmacyMapPageState extends State<PharmacyMapPage> {
                     }).toList(),
                   ),
               ),
-              if (routePoints.isNotEmpty)
+              if (isRouteVisible)
                 PolylineLayer(polylines: [
                   Polyline(
                       points: routePoints, strokeWidth: 4.0, color: Colors.blue)
-                ]),
+                ]), // Affiche l'itinéraire sur la carte
             ],
           ),
+          if (isRouteVisible)
+            Positioned(
+              bottom: 16.0,
+              left: 16.0,
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    routePoints.clear(); // Efface l'itinéraire
+                    travelTime = '';
+                    isRouteVisible = false;
+                  });
+                },
+                child: Text('Close Route'), // Bouton pour fermer l'itinéraire
+              ),
+            ),
+          if (isRouteVisible && travelTime.isNotEmpty)
+            Positioned(
+              bottom: 80.0,
+              left: 16.0,
+              child: Container(
+                padding: EdgeInsets.all(8.0),
+                color: Colors.white,
+                child: Text(
+                  'Estimated travel time: $travelTime', // Affiche le temps estimé de trajet
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                ),
+              ),
+            ),
           Positioned(
             bottom: 16.0,
-            left: 16.0,
-            child: Column(
-              children: [
-                if (travelTime.isNotEmpty)
-                  Container(
-                    padding: EdgeInsets.all(8.0),
-                    color: Colors.white,
-                    child: Text(
-                      'Estimated travel time: $travelTime',
-                      style: TextStyle(fontSize: 16.0, color: Colors.black),
-                    ),
-                  ),
-                Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedMode = 'walking';
-                        });
-                        if (viewModel.pharmacies.isNotEmpty) {
-                          fetchRouteAndTime(LatLng(
-                              viewModel.pharmacies[0].latitude,
-                              viewModel.pharmacies[0].longitude));
-                        }
-                      },
-                      child: Text('walking'),
-                    ),
-                    SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          selectedMode = 'driving';
-                        });
-                        if (viewModel.pharmacies.isNotEmpty) {
-                          fetchRouteAndTime(LatLng(
-                              viewModel.pharmacies[0].latitude,
-                              viewModel.pharmacies[0].longitude));
-                        }
-                      },
-                      child: Text('driving'),
-                    ),
-                  ],
-                ),
-              ],
+            right: 16.0,
+            child: FloatingActionButton(
+              onPressed: () {
+                mapController.move(userLocation, 14.0); // Centre la carte sur la position de l'utilisateur
+              },
+              child: Icon(Icons.my_location),
+              backgroundColor: const Color.fromARGB(255, 7, 214, 25),
             ),
           ),
         ],
