@@ -32,6 +32,13 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushNamed(context, '/about');
             },
           ),
+          ListTile(
+            leading: Icon(Icons.help),
+            title: Text('FAQs'),
+            onTap: () {
+              Navigator.pushNamed(context, '/faq');
+            },
+          ),
         ],
       ),
     );
