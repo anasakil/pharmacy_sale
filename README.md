@@ -33,6 +33,8 @@ L'application **L9a Pharmacy** permet aux utilisateurs de localiser des pharmaci
    flutter run
    Sur la carte, vous verrez plusieurs pharmacies indiquées par des marqueurs. Cliquez sur un marqueur pour voir les détails de la pharmacie et choisissez l'option de navigation souhaitée (Apple Maps ou Waze).
 
+## lien apk 
+https://www.mediafire.com/file/cmbfpq29bofbk6h/app-release.apk/file
 ## Démonstration Vidéo
 Voici une vidéo démonstrative de l'application en action :
 [Regarder la vidéo](assets/rec.mp4)
