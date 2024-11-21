@@ -20,22 +20,18 @@ L'application **L9a Pharmacy** permet aux utilisateurs de localiser des pharmaci
 
 1. Clonez le repository :
    git clone https://github.com/anasakil/pharmacy_sale.git
-Naviguez dans le répertoire du projet :
+2. Naviguez dans le répertoire du projet :
+   cd pharmacy_sale
+3. Installez les dépendances Flutter :
+   flutter pub get
+   Remplacez YOUR_MAPBOX_ACCESS_TOKEN dans le fichier lib/utils/tokenmapbox.dart par votre propre clé API Mapbox.
 
 
- cd pharmacy_sale
-2. Installez les dépendances Flutter :
 
-
-flutter pub get
-Remplacez YOUR_MAPBOX_ACCESS_TOKEN dans le fichier lib/utils/tokenmapbox.dart par votre propre clé API Mapbox.
-
-3. Utilisation
-Lancez l'application :
-
-
-flutter run
-Sur la carte, vous verrez plusieurs pharmacies indiquées par des marqueurs. Cliquez sur un marqueur pour voir les détails de la pharmacie et choisissez l'option de navigation souhaitée (Apple Maps ou Waze).
+4. Utilisation
+   Lancez l'application :
+   flutter run
+   Sur la carte, vous verrez plusieurs pharmacies indiquées par des marqueurs. Cliquez sur un marqueur pour voir les détails de la pharmacie et choisissez l'option de navigation souhaitée (Apple Maps ou Waze).
 
 ## Démonstration Vidéo
 Voici une vidéo démonstrative de l'application en action :
