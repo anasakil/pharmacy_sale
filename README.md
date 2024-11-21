@@ -35,7 +35,7 @@ L'application **L9a Pharmacy** permet aux utilisateurs de localiser des pharmaci
 
 ## Démonstration Vidéo
 Voici une vidéo démonstrative de l'application en action :
-[Regarder la vidéo]
+[Regarder la vidéo] (assets/rec.mp4)
 
 
 
