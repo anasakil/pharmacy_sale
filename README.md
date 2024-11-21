@@ -44,23 +44,15 @@ Voici une vidéo démonstrative de l'application en action :
 La structure du projet est la suivante :
 
 
-└── 📁lib
-    └── 📁components
-        └── CustomDrawer.dart       # Composant de la barre de navigation
-        └── SplashScreen.dart       # Écran d'accueil
-    └── 📁models
-        └── pharmacy_model.dart    # Modèle des données de la pharmacie
-    └── 📁pages
-        └── AboutPage.dart         # Page "À propos"
-        └── FAQPage.dart           # Page FAQ
-        └── PharmacyListPage.dart  # Liste des pharmacies
-        └── PharmacyMapPage.dart   # Page de la carte interactive avec pharmacies
-    └── 📁utils
-        └── tokenmapbox.dart       # Fichier contenant la clé API Mapbox
-    └── 📁viewmodels
-        └── pharmacy_viewmodel.dart # Logique de gestion des pharmacies
-    └── main.dart                  # Point d'entrée de l'application
-    └── pharmacy_list_screen.dart  # Écran de la liste des pharmacies
-    └── pharmacy_map_screen.dart   # Écran de la carte avec pharmacies
+- **`components/`** : Contient les composants réutilisables comme la barre de navigation (`CustomDrawer.dart`) et l'écran d'accueil (`SplashScreen.dart`).
+- **`models/`** : Contient le modèle de données pour les pharmacies, avec des informations comme le nom, la localisation, et les coordonnées (`pharmacy_model.dart`).
+- **`pages/`** : Contient les différentes pages de l'application comme la page "À propos", la FAQ, la liste des pharmacies, et la carte interactive avec les pharmacies.
+- **`utils/`** : Contient des fichiers utilitaires, notamment `tokenmapbox.dart` pour la gestion de la clé API Mapbox.
+- **`viewmodels/`** : Contient la logique de gestion des pharmacies (`pharmacy_viewmodel.dart`), responsable de la récupération des données et de l'affichage.
+- **`main.dart`** : Point d'entrée de l'application Flutter.
+- **`pharmacy_list_screen.dart`** : Écran qui affiche la liste des pharmacies.
+- **`pharmacy_map_screen.dart`** : Écran qui affiche la carte interactive avec les pharmacies.
+
+Cette structure permet de bien organiser le code en séparant les composants réutilisables, les pages, et la logique métier de manière claire et maintenable.
 
 
